@@ -1,0 +1,227 @@
+#!/bin/sh
+
+#   Copyright (C) 2007 by Matthew Alton  */
+#   
+#   This file is part of Syster.
+#   
+#   Syster is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#   
+#   Syster is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#   
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#  $Id: syster_ctl,v 1.1 2013/08/12 21:15:03 zma0472 Exp $
+
+#
+#  Functions.
+#
+output()
+{
+ echo "syster_ctl: $*"
+}
+
+error()
+{
+ echo "syster_ctl: error: $*" >&2
+}
+
+bail()
+{
+ error $*
+ echo
+ exit 2
+}
+
+usage()
+{
+ echo
+ echo '  Usage: syster_ctl < -V | -h | <start|stop|status> [testname ...] >'
+ echo
+}
+
+#
+#  Set script defaults.
+#
+default_syster_home='#PREFIX#'
+
+#
+#  Set up our environment.
+#
+if [ -z "$SYSTER_HOME" ]
+then
+    SYSTER_HOME=${default_syster_home}
+fi
+
+PATH=${SYSTER_HOME}/bin:${SYSTER_HOME}/sbin:${PATH}
+
+#
+#  Handle zero args, -V (version) & -h (help)
+#
+if [ $# -lt 1 ]
+then
+    usage; bail "Invocation error."
+elif [ $# -eq 1 ]
+then
+    if [ $1 = "-V" ]
+    then
+        output '$Revision: 1.1 $'; echo; exit 0
+    elif [ $1 = "-h" ]
+    then
+        usage; exit 0
+    fi
+fi
+
+operation=$1; shift
+
+if [ $operation != "start" -a $operation != "stop" -a $operation != "status" ]
+then
+    usage; bail "Invalid operation: $operation"
+fi
+
+#
+# Make sure we have our common directories and files.
+#
+if [ ! -d ${SYSTER_HOME} ]
+then
+    bail "$SYSTER_HOME not a directory."
+fi
+for dir in lib etc bin sbin var var/log var/lock var/mon
+do
+    if [ ! -d ${SYSTER_HOME}/${dir} ]
+    then
+        bail "${SYSTER_HOME}/${dir} not a directory."
+    fi
+done
+
+for file in etc/syster.defaults
+do
+    if [ ! -f ${SYSTER_HOME}/${file} ]
+    then
+        bail "${SYSTER_HOME}/${file} not a file."
+    fi
+    if [ ! -r ${SYSTER_HOME}/${file} ]
+    then
+        bail "${SYSTER_HOME}/${file} not readable."
+    fi
+done
+
+#
+#  Configure Syster for operation.
+#
+. ${SYSTER_HOME}/etc/syster.defaults
+
+#
+#  Construct the list of tests to be operated upon.
+#
+tests="$*"
+if [ -z "$tests" ]
+then
+    tests=${SYSTER_TESTS}
+fi
+
+#
+#  Perform the operation specified on the command line.
+#
+case "$operation" in
+    "start")
+        #
+        #  Make sure we have test executables for each testname specified and
+        #  conditionally start the test daemons.
+        #
+        for testname in $tests
+        do
+            if [ ! -x ${SYSTER_HOME}/sbin/syster_${testname} ]
+            then
+                bail "${SYSTER_HOME}/sbin/syster_${testname} not found."
+            fi
+        done
+        for testname in $tests
+        do
+            output "starting $testname"
+            SYSTER_HOME=${SYSTER_HOME} syster_${testname}
+        done
+        ;;
+    "status")
+        #
+        #  Check to see if the lockfiles created by the tests exist.  Report
+        #  our findings.
+        #
+        for testname in $tests
+        do
+            lockfile="${SYSTER_HOME}/var/lock/syster_${testname}.pid"
+            if [ -f ${lockfile} ]
+            then
+                if [ ! -r ${lockfile} ]
+                then
+                    error "Cannot read ${lockfile}"
+                    continue
+                elif [ ! -s ${lockfile} ]
+                then
+                    output "$testname status = SYSTEM LOCK"
+                    continue
+                else
+                    if [ "`wc -l $lockfile | awk '{print $1}'`" -ne 0 ]
+                    then
+                        error "$lockfile CORRUPT -- contains newline"
+                        continue
+                    fi
+                    pid=`cat $lockfile | egrep '^[0-9]+$'`
+                    if [ -z "$pid" ]
+                    then
+                        error "$lockfile CORRUPT"
+                        continue
+                    else 
+                        output "$testname status = LOCKED  PID=${pid}"
+                    fi
+                fi
+            else
+                output "$testname status = UNLOCKED"
+            fi
+        done
+        ;;
+    "stop")
+        #
+        #  Check to see if the processes whose pids are in the pidfiles are
+        #  running and that they are correctly named.  If so, kill them.
+        #
+        for name in $tests
+        do
+            lock=${SYSTER_HOME}/var/lock/syster_${name}.pid
+
+            if [ -f $lock ]
+            then
+                if [ -r $lock ]
+                then
+                    pid=`cut -b-32 $lock | head -1 | egrep '^[0-9]+$'`
+                    if [ ! -z "$pid" ]
+                    then
+                        ps -p $pid | grep syster_ > /dev/null 2>&1
+                        if [ $? -eq 0 ]
+                        then
+                            output "Stopping $name pid=${pid} ..."
+                            kill $pid
+                        else
+                            error "${name}: pid=${pid} not running."
+                        fi
+                    else
+                        error "${name}: Invalid $lock"
+                    fi
+                else
+                    error "${name}: $lock unreadable."
+                fi
+            else
+                error "${name}: No lockfile ${lock}."
+            fi
+        done
+        ;;
+esac
+
+exit 0
+

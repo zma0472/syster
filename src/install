@@ -1,0 +1,137 @@
+#!/bin/sh
+
+#  $Id: install,v 1.1 2013/08/12 21:15:03 zma0472 Exp $
+
+#
+#  Functions.
+#
+output()
+{
+ echo "install: $*"
+}
+
+error()
+{
+ echo "install: error: $*" >&2
+}
+
+bail()
+{
+ error $*
+ echo
+ exit 2
+}
+
+do_or_die()
+{
+ echo $*
+ $*
+ if [ $? -ne 0 ]
+ then
+     bail "$* FAIL"
+ fi
+}
+
+#
+#  Set script defaults.
+#
+default_syster_home='#PREFIX#'
+
+if [ -z "$SYSTER_HOME" ]
+then
+    SYSTER_HOME=${default_syster_home}
+fi
+
+echo; echo; output "Installing Syster System Availability Metrics"; echo
+
+#
+#  Check Syster installation files.
+#
+bins="syster_dbg syster_rpt"
+sbins="syster_ctl syster_cpc syster_mem syster_net syster_ufs"
+scripts="syster.defaults"
+configs="syster.conf"
+
+output "Checking Syster installation files..."
+
+for file in $bins $sbins $scripts $configs
+do
+    if [ ! -f $file ]
+    then
+        bail "Missing installation file: $file."
+    fi
+done
+
+#
+#  Stop Syster if it is currently running.
+#
+
+output "Stopping running Syster instance..."
+
+if [ -x ${SYSTER_HOME}/sbin/syster_ctl ]
+then
+    ${SYSTER_HOME}/sbin/syster_ctl stop
+fi
+
+#
+#  Create Syster directories.
+#
+dirs="lib etc sbin bin var var/log var/lock var/mon"
+
+output "Creating Syster directory structure..."
+
+if [ ! -d $SYSTER_HOME ]
+then
+    do_or_die mkdir $SYSTER_HOME
+fi
+
+for dir in $dirs
+do
+    if [ ! -d ${SYSTER_HOME}/${dir} ]
+    then
+        do_or_die mkdir ${SYSTER_HOME}/${dir}
+    fi
+done
+
+#
+#  Copy Syster files into the directory structure
+#
+
+output "Copying executable files into Syster directories..."
+
+for file in $bins
+do
+    do_or_die rm -f ${SYSTER_HOME}/bin/${file}
+    do_or_die cp $file ${SYSTER_HOME}/bin/.
+    do_or_die chmod 555 ${SYSTER_HOME}/bin/${file}
+done
+
+for file in $sbins
+do
+    do_or_die rm -f ${SYSTER_HOME}/sbin/${file}
+    do_or_die cp $file ${SYSTER_HOME}/sbin/.
+    do_or_die chmod 555 ${SYSTER_HOME}/sbin/${file}
+done
+
+output "Copying configuration files into Syster directories..."
+
+for file in $configs
+do
+    if [ -f ${SYSTER_HOME}/etc/${file} ]
+    then
+        output "Preserving existing ${SYSTER_HOME}/etc/${file}"
+    else
+        do_or_die cp $file ${SYSTER_HOME}/etc/.
+        do_or_die chmod 444 ${SYSTER_HOME}/etc/${file}
+    fi
+    do_or_die rm -f ${SYSTER_HOME}/etc/syster.defaults
+    do_or_die cp syster.defaults ${SYSTER_HOME}/etc/.
+    do_or_die chmod 444 ${SYSTER_HOME}/etc/syster.defaults
+done
+
+echo
+output "Syster successfully installed in $SYSTER_HOME"
+echo
+
+exit 0
+

@@ -1,0 +1,129 @@
+#!/bin/sh
+
+#   Copyright (C) 2007 by Matthew Alton  */
+#   
+#   This file is part of Syster.
+#   
+#   Syster is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#   
+#   Syster is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#   
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#  $Id: syster_dbg,v 1.1 2013/08/12 21:15:03 zma0472 Exp $
+
+#
+#  Trap to undebug function at exit time to avoid leaving a test in debug mode.
+#
+trap undebug INT
+
+#
+#  Functions.
+#
+
+output()
+{
+ echo "syster_dbg: $*"
+}
+
+undebug()
+{
+ if [ ! -z "$dbg_pid" ]
+ then
+     output "Signal SIGUSR2 to syster_${test_name} PID=${dbg_pid}"
+     kill -USR2 $dbg_pid
+ fi
+}
+
+error()
+{
+ echo "syster_dbg: error: $*" >&2
+}
+
+bail()
+{
+ error $*
+ echo
+ exit 2
+}
+
+usage()
+{
+ echo
+ echo '  Usage: syster_dbg < -V | -h | testname >'
+ echo
+}
+
+#
+#  Set script defaults.
+#
+default_syster_home='#PREFIX#'
+
+#
+#  Set up our environment.
+#
+if [ -z "$SYSTER_HOME" ]
+then
+    SYSTER_HOME=${default_syster_home}
+fi
+
+#
+#  Handle zero args, -V (version) & -h (help)
+#
+if [ $# -ne 1 ]
+then
+    usage; bail "Invocation error."
+else
+    if [ $1 = "-V" ]
+    then
+        output '$Revision: 1.1 $'; echo; exit 0
+    elif [ $1 = "-h" ]
+    then
+        usage; exit 0
+    fi
+fi
+
+test_name=$1; shift
+
+lockfile="${SYSTER_HOME}/var/lock/syster_${test_name}.pid"
+
+errfile="${SYSTER_HOME}/var/log/syster_${test_name}.err"
+
+if [ -f $lockfile ]
+then
+    dbg_pid=`cat $lockfile`
+    if [ -z "$dbg_pid" ]
+    then
+        bail "Invalid lock file: $lockfile"
+#       XXX - More thorough testing of dbg_pid.
+    fi
+else
+    bail "No lock file: $lockfile"
+fi
+
+if [ ! -f $errfile ]
+then
+    bail "No error file: $errfile"
+elif [ ! -r $errfile ]
+then
+    bail "Cannot read error file: $errfile"
+fi
+
+kill -USR2 $dbg_pid
+
+if [ 0 -ne $? ]
+then
+    bail "Cannot send SIGUSR2 to PID=${dbg_pid}"
+fi
+
+tail -f $errfile 
+
+exit 0
+

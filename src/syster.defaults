@@ -1,0 +1,127 @@
+
+#  $Id: syster.defaults,v 1.1 2013/08/12 21:15:03 zma0472 Exp $
+
+#  This file is used to set default values for SYSTER environment variables.
+#  It is NOT INTENDED to be edited in the course of normal operation.  Please
+#  edit the syster.conf file to configure SYSTER.  See syster(8),
+#  syster_ctl(8), syster.conf(8), and syster.defaults(8) for additional
+#  information.
+#
+
+#
+#  Global & Per-Test Variable Default Values.
+#
+
+#
+#  Syster Global Variables.
+#
+
+syster_tests='ufs cpc mem net'
+syster_debug=off
+syster_delay=6
+
+#
+#  MEM Test Variable Default Values.
+#
+
+mem_pidpath=${SYSTER_HOME}/var/lock/syster_mem.pid
+mem_testpath=${SYSTER_HOME}/var/mon/syster_mem
+mem_logpath=${SYSTER_HOME}/var/log/syster_mem.log
+mem_errpath=${SYSTER_HOME}/var/log/syster_mem.err
+mem_delay=6
+mem_debug=off
+
+#
+#  UFS Test Variable Default Values.
+#
+
+ufs_pidpath=${SYSTER_HOME}/var/lock/syster_ufs.pid
+ufs_testpath=${SYSTER_HOME}/var/mon/syster_ufs
+ufs_logpath=${SYSTER_HOME}/var/log/syster_ufs.log
+ufs_errpath=${SYSTER_HOME}/var/log/syster_ufs.err
+ufs_delay=6
+ufs_debug=off
+
+#
+#  CPC Test Variable Default Values.
+#
+
+cpc_pidpath=${SYSTER_HOME}/var/lock/syster_cpc.pid
+cpc_testpath=${SYSTER_HOME}/var/mon/syster_cpc
+cpc_logpath=${SYSTER_HOME}/var/log/syster_cpc.log
+cpc_errpath=${SYSTER_HOME}/var/log/syster_cpc.err
+cpc_delay=6
+cpc_debug=off
+
+#
+#  NET Test Variable Default Values.
+#
+
+net_pidpath=${SYSTER_HOME}/var/lock/syster_net.pid
+net_testpath=${SYSTER_HOME}/var/mon/syster_net
+net_logpath=${SYSTER_HOME}/var/log/syster_net.log
+net_errpath=${SYSTER_HOME}/var/log/syster_net.err
+net_echo_node=ssham327
+net_echo_port=7
+net_delay=6
+net_debug=off
+
+if [ -f ${SYSTER_HOME}/etc/syster.conf ]
+then
+    . ${SYSTER_HOME}/etc/syster.conf
+fi
+
+#
+#  Syster Global Variable Assignments.
+#
+
+: ${SYSTER_TESTS:="${syster_tests}"} ; export SYSTER_TESTS
+: ${SYSTER_DELAY:="${syster_delay}"} ; export SYSTER_DELAY
+: ${SYSTER_DEBUG:="${syster_debug}"} ; export SYSTER_DEBUG
+
+#
+#  MEM Test Variable Assignments
+#
+
+: ${SYSTER_MEM_PIDPATH:="${mem_pidpath}"} ;   export SYSTER_MEM_PIDPATH
+: ${SYSTER_MEM_TESTPATH:="${mem_testpath}"} ; export SYSTER_MEM_TESTPATH
+: ${SYSTER_MEM_LOGPATH:="${mem_logpath}"} ;   export SYSTER_MEM_LOGPATH
+: ${SYSTER_MEM_ERRPATH:="${mem_errpath}"} ;   export SYSTER_MEM_ERRPATH
+: ${SYSTER_MEM_DELAY:="${mem_delay}"} ;       export SYSTER_MEM_DELAY
+: ${SYSTER_MEM_DEBUG:="${mem_debug}"} ;       export SYSTER_MEM_DEBUG
+
+#
+#  UFS Test Variable Assignments.
+#
+
+: ${SYSTER_UFS_PIDPATH:="${ufs_pidpath}"} ;   export SYSTER_UFS_PIDPATH
+: ${SYSTER_UFS_TESTPATH:="${ufs_testpath}"} ; export SYSTER_UFS_TESTPATH
+: ${SYSTER_UFS_LOGPATH:="${ufs_logpath}"} ;   export SYSTER_UFS_LOGPATH
+: ${SYSTER_UFS_ERRPATH:="${ufs_errpath}"} ;   export SYSTER_UFS_ERRPATH
+: ${SYSTER_UFS_DELAY:="${ufs_delay}"} ;       export SYSTER_UFS_DELAY
+: ${SYSTER_UFS_DEBUG:="${ufs_debug}"} ;       export SYSTER_UFS_DEBUG
+
+#
+#  CPC Test Variable Assignments.
+#
+
+: ${SYSTER_CPC_PIDPATH:="${cpc_pidpath}"} ;   export SYSTER_CPC_PIDPATH
+: ${SYSTER_CPC_TESTPATH:="${cpc_testpath}"} ; export SYSTER_CPC_TESTPATH
+: ${SYSTER_CPC_LOGPATH:="${cpc_logpath}"} ;   export SYSTER_CPC_LOGPATH
+: ${SYSTER_CPC_ERRPATH:="${cpc_errpath}"} ;   export SYSTER_CPC_ERRPATH
+: ${SYSTER_CPC_DELAY:="${cpc_delay}"} ;       export SYSTER_CPC_DELAY
+: ${SYSTER_CPC_DEBUG:="${cpc_debug}"} ;       export SYSTER_CPC_DEBUG
+
+#
+#  NET Test Variable Assignments.
+#
+
+: ${SYSTER_NET_PIDPATH:="${net_pidpath}"} ;     export SYSTER_NET_PIDPATH
+: ${SYSTER_NET_TESTPATH:="${net_testpath}"} ;   export SYSTER_NET_TESTPATH
+: ${SYSTER_NET_LOGPATH:="${net_logpath}"} ;     export SYSTER_NET_LOGPATH
+: ${SYSTER_NET_ERRPATH:="${net_errpath}"} ;     export SYSTER_NET_ERRPATH
+: ${SYSTER_NET_ECHO_NODE:="${net_echo_node}"} ; export SYSTER_NET_ECHO_NODE
+: ${SYSTER_NET_ECHO_PORT:="${net_echo_port}"} ; export SYSTER_NET_ECHO_PORT
+: ${SYSTER_NET_DELAY:="${net_delay}"} ;         export SYSTER_NET_DELAY
+: ${SYSTER_NET_DEBUG:="${net_debug}"} ;         export SYSTER_NET_DEBUG
+

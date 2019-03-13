@@ -1,0 +1,49 @@
+
+#  $Id: syster.list,v 1.1 2013/08/12 21:15:03 zma0472 Exp $
+
+%product     Syster System Availability Metrics
+%copyright   2007-2008 by Matthew Alton, All Rights Reserved
+%vendor      Syster Development Project
+%license     COPYING
+%readme      README
+%description System Availability Metrics Monitoring, Recording, & Reporting
+%version     1.0.0b 10000b
+
+%preinstall  echo 'Installing Syster System Availability Metrics v.1.0.0b.'
+%postinstall echo 'Syster System Availability Metrics v.1.0.0b Installed.'
+
+%preremove   echo 'Removing Syster System Availability Metrics v.1.0.0b.'
+%postremove  echo 'Syster System Availability Metrics v.1.0.0b Removed.'
+
+$prefix=/usr/local/syster
+
+d 755 root sys ${prefix}          -
+d 755 root sys ${prefix}/bin      -
+d 755 root sys ${prefix}/etc      -
+d 755 root sys ${prefix}/lib      -
+d 755 root sys ${prefix}/sbin     -
+d 755 root sys ${prefix}/var      -
+d 755 root sys ${prefix}/var/lib  -
+d 755 root sys ${prefix}/var/lock -
+d 755 root sys ${prefix}/var/log  -
+d 755 root sys ${prefix}/var/mon  -
+
+f 555 root sys ${prefix}/bin/syster_dbg syster_dbg
+f 555 root sys ${prefix}/bin/syster_rpt syster_rpt
+
+c 444 root sys ${prefix}/etc/syster.conf     syster.conf
+f 444 root sys ${prefix}/etc/syster.defaults syster.defaults
+
+f 555 root sys ${prefix}/sbin/syster_cpc    syster_cpc
+f 555 root sys ${prefix}/sbin/syster_ctl    syster_ctl
+f 555 root sys ${prefix}/sbin/syster_mem    syster_mem
+f 555 root sys ${prefix}/sbin/syster_net    syster_net
+f 555 root sys ${prefix}/sbin/syster_ufs    syster_ufs
+
+f 555 root sys ${prefix}/var/lib/syster_report syster_report
+
+l 000 root   sys /usr/bin/syster_ctl ${prefix}/sbin/syster_ctl
+
+l 000 root   sys /usr/bin/syster_dbg ${prefix}/bin/syster_dbg
+l 000 root   sys /usr/bin/syster_rpt ${prefix}/bin/syster_rpt
+

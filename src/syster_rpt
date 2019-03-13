@@ -1,0 +1,113 @@
+#!/bin/sh
+
+#   Copyright (C) 2007 by Matthew Alton  */
+#   
+#   This file is part of Syster.
+#   
+#   Syster is free software; you can redistribute it and/or modify
+#   it under the terms of the GNU General Public License as published by
+#   the Free Software Foundation; either version 2 of the License, or
+#   (at your option) any later version.
+#   
+#   Syster is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU General Public License for more details.
+#   
+#   You should have received a copy of the GNU General Public License
+#   along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#  $Id: syster_rpt,v 1.1 2013/08/12 21:15:03 zma0472 Exp $
+
+#
+#  Functions.
+#
+
+output()
+{
+ echo "syster_rpt: $*"
+}
+
+error()
+{
+ echo "syster_rpt: error: $*" >&2
+}
+
+bail()
+{
+ error $*
+ echo
+ exit 2
+}
+
+usage()
+{
+ echo
+ echo '  Usage: syster_rpt [ -V ]  [ -h ] [ -t tolerance ] testname'
+ echo
+}
+
+#
+#  Set script defaults.
+#
+default_syster_home='#PREFIX#'
+default_delay_tolerance=0
+
+#
+#  Set up our environment.
+#
+if [ -z "$SYSTER_HOME" ]
+then
+    SYSTER_HOME=${default_syster_home}
+fi
+
+delay_tolerance=${default_delay_tolerance}
+
+#
+#  Handle args [-V (version)] [-h (help)] -t <tolerance> testname
+#
+while getopts Vht: opt
+do
+    case $opt in
+        V) output 'syster_rpt $Revision: 1.1 $'; echo;
+           if [ -x ${SYSTER_HOME}/var/lib/syster_report ]
+           then
+               ${SYSTER_HOME}/var/lib/syster_report -V
+           fi
+           exit 0 ;;
+        h) usage
+           exit 0 ;;
+        t) delay_tolerance="$OPTARG"
+           ;;
+        *) usage
+           exit 2 ;;
+    esac
+done
+
+shift `expr $OPTIND - 1`
+if [ 1 -ne $# ]
+then
+    usage; exit 2
+fi
+
+test_name="$*"
+
+recfile="${SYSTER_HOME}/var/mon/syster_${test_name}"
+
+if [ ! -f $recfile ]
+then
+    bail "No monitor record file: $recfile"
+elif [ ! -r $recfile ]
+then
+    bail "Cannot read monitor record file: $recfile"
+fi
+
+if [ ! -x ${SYSTER_HOME}/var/lib/syster_report ]
+then
+    bail "Missing executable: ${SYSTER_HOME}/var/lib/syster_report"
+fi
+
+cat $recfile | ${SYSTER_HOME}/var/lib/syster_report -t $delay_tolerance
+
+exit 0
+
