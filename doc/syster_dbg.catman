@@ -1,0 +1,56 @@
+SYSTER_DBG(8)           Syster Administrative Utilities            SYSTER_DBG(8)
+
+NAME
+    syster_dbg - Syster monitor debugging and troubleshooting utility
+
+SYNOPSIS
+    syster_dbg  monitor
+
+DESCRIPTION
+    syster_dbg is a utility for aiding in the debugging of Syster monitors and
+    for providing detailed information on their operation.  This information is
+    useful in troubleshooting monitor issues.  Although the monitor processes
+    can be switched to and from debug mode manually, syster_dbg encapsulates
+    tasks such as sending signals to monitors and viewing debugging output.
+
+OPERATION
+    In normal operation, syster_dbg is invoked interactively with the name of a
+    subsystem monitor as its sole command line argument.  syster_dbg first
+    determines the PID of the relevant monitor, and then sends a SIGUSR2 signal
+    to the running monitor process.  This signal has the effect of toggling the
+    debugging mode of the process.  syster_dbg assumes that the debug mode of
+    the process is initially off and that the signal has the effect of turning
+    it on.  syster_dbg then writes the debugging output of the monitor process
+    to stdout until a SIGINT is received, usually as a result of the user
+    entering a ctrl-C character at the keyboard.  Upon receipt of the SIGINT
+    signal, the syster_dbg process sends a second SIGUSR2 signal to the monitor
+    process being debugged and then exits normally.  This second SIGUSR2 is
+    assumed to have the effect of switching the debug mode of the monitor
+    process off.  See the NOTES section of this manual page for corrective
+    action required if any of the assumptions made by syster_dbg are invalid.
+
+ENVIRONMENT
+    SYSTER_HOME  (Default: /usr/local/syster)
+        Pathname of the directory containing the Syster instance.
+
+FILES
+    ${SYSTER_HOME}/sbin/syster_dbg
+    ${SYSTER_HOME}/etc/syster.conf
+    ${SYSTER_HOME}/etc/syster.defaults
+
+NOTES
+    Compliant Syster monitors must handle SIGUSR2 signals by toggling their
+    debug mode.  syster_dbg operates on the assumption that the debug mode of
+    the monitor process to be debugged is initially off.  Because syster_dbg
+    sends pairs of SIGURS2 signals to the monitor process, the effect of a
+    a normal run of the syster_dbg utility is to leave the monitor process in
+    its initial debug mode.  If the debug mode of the process is initially on,
+    then a single SIGUSR2 signal must be sent to the process manually.
+
+    In  addition to the documentation  and man pages  included with  the Syster
+    distribution, more information is available at http://www.netmq.org/syster
+
+
+RCSID
+    $Id: syster_dbg.catman,v 1.1 2013/08/12 20:57:54 zma0472 Exp $
+

@@ -1,0 +1,28 @@
+SYSTER.CONF(5)             Syster Configuration Files             SYSTER.CONF(5)
+
+NAME
+    syster.conf - Syster main configuration file.
+
+DESCRIPTION
+    This is the main Syster configuration file.  As distributed, this file
+    contains the names of all of Syster's configurable settings.  Each setting
+    is assigned its default value and commented out.  In order to changed a
+    setting to a non-default value, un-comment the line containing the value
+    assignment for the setting and then edit the asigned value.
+
+FILES
+    ${SYSTER_HOME}/etc/syster.conf
+    ${SYSTER_HOME}/etc/syster.defaults
+
+SEE ALSO
+    syster(8), syster_ctl(8),    syster.defaults(5),  syster_dbg(1),
+    syster_rpt(1), syster_mem(8), syster_ufs(8),  syster_cpc(8), syster_net(8)
+
+NOTES
+    In  addition to the documentation  and man pages  included with  the Syster
+    distribution, more information is available at http://www.netmq.org/syster
+
+
+RCSID
+    $Id: syster.conf.txt,v 1.1 2013/08/12 20:57:54 zma0472 Exp $
+

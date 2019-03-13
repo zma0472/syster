@@ -1,0 +1,77 @@
+SYSTER_REPORT(8)        Syster Administrative Utilities         SYSTER_REPORT(8)
+
+NAME
+    syster_report - Syster monitor log reporting utility
+
+SYNOPSIS
+    syster_report [ -V | -h | -? ]
+
+    syster_report [ -A  ] [ -L ] [ -t tolerance ] [ -b begin ] [ -e end ]
+
+DESCRIPTION
+    syster_report is a utility for analyzing Syster monitor logs and generating
+    system availability outage reports.
+
+    syster_report reads input lines from standard input and parses whitespace-
+    delimited record fields of the form:
+
+        DELAY TIMESTAMP
+
+    where DELAY and TIMESTAMP are textual representations of non-negative
+    integers less than 2^32.
+
+    Comments begin with the '#' character.  Comment lines, trailing comments,
+    and blank lines are silently ignored.  Invalid lines generate a message to
+    standard error.
+
+    For all valid input lines except the first, syster_report subtracts the
+    value of the previous line's DELAY record from the value of the TIMESTAMP
+    column of the current line.  If the difference thus obtained is greater
+    than the sum of the values of the tolerance and the DELAY record from the
+    previous line, syster_report writes a line to standard output of the form:
+
+    LINE_NO  DELAY  TOLERANCE  OUTAGE  TIMESTAMP
+
+    where LINE_NO is the line number of the input stream, DELAY is the value of
+    the DELAY column from the previous line, TOLERANCE is the value of the
+    tolerance, OUTAGE is the difference between the values of the TIMESTAMP
+    columns of the current and previous lines, and TIMESTAMP is the value of
+    the TIMESTAMP column of the previous line.
+
+    A syster_report line written to standard output may be interpreted to mean:
+    "At input line number LINE_NO, an outage of duration OUTAGE was detected to
+    have occurred at time TIMESTAMP."
+
+OPTIONS
+
+    -V              Report syster_report version information and exit.
+
+    -h              Output usage information and exit.
+
+    -?              Output usage information and exit.
+
+    -A              Use ctime format for time stamps in reporting.
+
+    -L              Apply field labels in reporting.
+
+    -b epoch        Begin analysis time period at "epoch" (seconds elapsed
+                    since 00:00 01 Jan 1970).  Defaults to the time stamp in
+                    the first input line.
+
+    -e epoch        End analysis time period at "epoch" (seconds elapsed since
+                    00:00 01 Jan 1970).  Defaults to the time stamp in the last
+                    input line.
+
+    -t tolerance    Use the value of "tolerance" in analysis and reporting.
+                    The tolerance has a default value of zero.
+
+FILES
+    ${SYSTER_HOME}/lib/syster_report
+
+NOTES
+    In  addition to the documentation  and man pages  included with  the Syster
+    distribution, more information is available at http://www.netmq.org/syster
+
+RCSID
+    $Id: syster_report.catman,v 1.1 2013/08/12 20:57:54 zma0472 Exp $
+

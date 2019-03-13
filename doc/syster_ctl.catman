@@ -1,0 +1,169 @@
+SYSTER_CTL(8)           Syster Administrative Utilities            SYSTER_CTL(8)
+
+NAME
+    syster_ctl - Syster control utility
+
+SYNOPSIS
+    syster_ctl < start | status | stop > [ monitor [ ... ] ]
+
+DESCRIPTION
+    syster_ctl is a utility for starting, stopping, or reporting the
+    operational status of Syster monitor processes.  Although the monitor
+    processes can be started manually, syster_ctl encapsulates tasks such as
+    setting operational environment variables and debug levels.
+
+OPTIONS
+    start [ monitor [ ... ] ]
+        Attempt to start each monitor listed on the command line.  If no
+        monitors are listed on the command line, attempt to start each monitor
+        configured in syster.conf(8).
+
+    status [ monitor [ ... ] ]
+        Report the operational status of each monitor listed on the command
+        line.  If no monitors are listed on the command line, attempt to report
+        the operational status of each monitor configured in syster.conf(8).
+
+    stop [ monitor [ ... ] ]
+        Attempt to stop each monitor listed on the command line.  If no
+        monitors are listed on the command line, attempt to stop each monitor
+        configured in syster.conf(8).
+
+ENVIRONMENT
+    SYSTER_HOME  (Default: /usr/local/syster)
+        Pathname of the directory containing the Syster instance.
+
+    SYSTER_TESTS  (Default:  "all")
+        List of monitor names.
+
+    SYSTER_DEBUG (Default: "off")
+        Initial monitor debug state "on" or "off".
+
+    SYSTER_DELAY  (Default: 6)
+        Number of secords that each monitor will sleep between test iterations.
+
+    SYSTER_CPC_PIDPATH  (Default: ${SYSTER_HOME}/var/lock/syster_cpc.pid)
+        Pathname of the Child Process Creation (CPC) monitor lockfile.
+        Contains the PID of the running syster_cpc process.
+
+    SYSTER_CPC_TESTPATH  (Default: ${SYSTER_HOME}/var/mon/syster_cpc)
+        Pathname of the CPC monitor log.  Contains the concatenated
+        logs of all CPC monitors executed since the file was created.
+
+    SYSTER_CPC_LOGPATH  (Default: ${SYSTER_HOME}/var/log/syster_cpc.log)
+        Pathname of the CPC monitor operational logfile.  Contains the
+        concatenated operational log output of all CPC monitors executed since
+        the file was created.
+
+    SYSTER_CPC_ERRPATH  (Default: ${SYSTER_HOME}/var/log/syster_cpc.log)
+        Pathname of the CPC monitor error logfile.  Contains the concatenated
+        error log output of all CPC monitors executed since the file was
+        created.
+
+    SYSTER_CPC_DELAY  (Default: 6)
+        Number of whole seconds that the CPC monitor process will sleep between
+        test iterations.
+
+    SYSTER_CPC_DEBUG  (Default: "off")
+        Boolean value of the debugging status variable for the CPC test.  This
+        variable should be set to "on" or "off".
+
+    SYSTER_MEM_PIDPATH
+        Pathname of the Virtual Memory (MEM) monitor lockfile.  Contains the
+        PID of the running syster_mem process.
+        Default is ${SYSTER_HOME}/var/lock/syster_mem.pid
+
+    SYSTER_MEM_TESTPATH
+        Pathname of the MEM monitor log.  Contains the concatenated
+        log of all MEM monitors executed since the file was created.
+        Default is ${SYSTER_HOME}/var/mon/syster_mem
+
+    SYSTER_MEM_LOGPATH
+        Pathname of the MEM monitor operational logfile.  Contains the
+        concatenated operational log output of all MEM monitors executed since
+        the file was created.
+        Default is ${SYSTER_HOME}/var/log/syster_mem.log
+
+    SYSTER_MEM_ERRPATH
+        Pathname of the MEM monitor error logfile.  Contains the concatenated
+        error log output of all MEM monitors executed since the file was
+        created.  Default is ${SYSTER_HOME}/var/log/syster_mem.log
+
+    SYSTER_MEM_DELAY
+        Number of whole seconds that the MEM monitor process will sleep between
+        test iterations.  Default is 6.
+
+    SYSTER_MEM_DEBUG
+        Boolean value of the debugging status variable for the MEM test.  This
+        variable should be set to "on" or "off".  Default is "off".
+
+    SYSTER_NET_PIDPATH
+        Pathname of the Network (NET) monitor lockfile.  Contains the
+        PID of the running syster_net process.
+        Default is ${SYSTER_HOME}/var/lock/syster_net.pid
+
+    SYSTER_NET_TESTPATH
+        Pathname of the NET monitor log.  Contains the concatenated
+        logs of all NET monitors executed since the file was created.
+        Default is ${SYSTER_HOME}/var/mon/syster_net
+
+    SYSTER_NET_LOGPATH
+        Pathname of the NET monitor operational logfile.  Contains the
+        concatenated operational log output of all NET monitors executed since
+        the file was created.
+        Default is ${SYSTER_HOME}/var/log/syster_net.log
+
+    SYSTER_NET_ERRPATH
+        Pathname of the NET monitor error logfile.  Contains the concatenated
+        error log output of all NET monitors executed since the file was
+        created.  Default is ${SYSTER_HOME}/var/log/syster_net.log
+
+    SYSTER_NET_DELAY
+        Number of whole seconds that the NET monitor process will sleep between
+        test iterations.  Default is 6.
+
+    SYSTER_NET_DEBUG
+        Boolean value of the debugging status variable for the NET test.  This
+        variable should be set to "on" or "off".  Default is "off".
+
+    SYSTER_UFS_PIDPATH
+        Pathname of the Filesystem (UFS) monitor lockfile.  Contains the
+        PID of the running syster_ufs process.
+        Default is ${SYSTER_HOME}/var/lock/syster_ufs.pid
+
+    SYSTER_UFS_TESTPATH
+        Pathname of the UFS monitor log.  Contains the concatenated
+        logs of all UFS monitors executed since the file was created.
+        Default is ${SYSTER_HOME}/var/mon/syster_ufs
+
+    SYSTER_UFS_LOGPATH
+        Pathname of the UFS monitor operational logfile.  Contains the
+        concatenated operational log output of all UFS monitors executed since
+        the file was created.
+        Default is ${SYSTER_HOME}/var/log/syster_ufs.log
+
+    SYSTER_UFS_ERRPATH
+        Pathname of the UFS monitor error logfile.  Contains the concatenated
+        error log output of all UFS monitors executed since the file was
+        created.  Default is ${SYSTER_HOME}/var/log/syster_ufs.log
+
+    SYSTER_UFS_DELAY
+        Number of whole seconds that the UFS monitor process will sleep between
+        test iterations.  Default is 6.
+
+    SYSTER_UFS_DEBUG
+        Boolean value of the debugging status variable for the UFS test.  This
+        variable should be set to "on" or "off".  Default is "off".
+
+FILES
+    ${SYSTER_HOME}/sbin/syster_ctl
+    ${SYSTER_HOME}/etc/syster.conf
+    ${SYSTER_HOME}/etc/syster.defaults
+
+NOTES
+    In  addition to the documentation  and man pages  included with  the Syster
+    distribution, more information is available at http://www.netmq.org/syster
+
+
+RCSID
+    $Id: syster_ctl.catman,v 1.1 2013/08/12 20:57:54 zma0472 Exp $
+

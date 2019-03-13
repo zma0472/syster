@@ -1,0 +1,49 @@
+
+  $Id: syster_instance.txt,v 1.1 2013/08/12 20:57:54 zma0472 Exp $
+
+${SYSTER_HOME}/
+              /bin/
+              |    syster_dbg
+              |    syster_rpt
+              /catman/
+              |    syster.1L.catman
+              |    syster.conf.5L.catman
+              |    syster_ctl.8L.catman
+              |    syster_cpc.8L.catman
+              |    syster_dbg.1L.catman
+              |    syster.defaults.5L.catman
+              |    syster_mem.8L.catman
+              |    syster_net.8L.catman
+              |    syster_rpt.1L.catman
+              |    syster_ufs.8L.catman
+              /etc/
+              |    syster.conf
+              |    syster.defaults
+              /lib/
+                   syster_report
+              /man/
+              |    syster.1L
+              |    syster.conf.5L
+              |    syster_ctl.8L
+              |    syster_cpc.8L
+              |    syster_dbg.1L
+              |    syster.defaults.5L
+              |    syster_mem.8L
+              |    syster_net.8L
+              |    syster_rpt.1L
+              |    syster_ufs.8L
+              /sbin/
+              |     syster_ctl
+              |     syster_cpc
+              |     syster_mem
+              |     syster_net
+              |     syster_ufs
+              /var/
+                  /lock/
+                  |     syster_XXX.pid
+                  /log/
+                  |    syster_XXX.log
+                  |    syster_XXX.err
+                  /mon/
+                       syster_XXX
+

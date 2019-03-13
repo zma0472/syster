@@ -1,0 +1,64 @@
+SYSTER_UFS(8)           Syster POSIX Subsystem Monitors            SYSTER_UFS(8)
+
+NAME
+    syster_ufs - Syster Filesystem (UFS) monitor
+
+SYNOPSIS
+    syster_ufs
+
+DESCRIPTION
+    syster_ufs is the Syster filesystem POSIX subsystem monitor daemon.  The
+    daemon periodically performs direct tests of the filesystem availability.
+    It operates by attempting to a record to the daemon's monitor log.  This
+    record constitutes proof of the availability, at the time of the record's
+    creation, of the filesystem subsystem to user-mode processes.
+
+ENVIRONMENT
+    SYSTER_HOME  (Default: /usr/local/syster)
+        Pathname of the directory containing the Syster instance.
+
+    SYSTER_DEBUG (Default: "off")
+        Initial monitor debug state "on" or "off".
+
+    SYSTER_DELAY  (Default: 6)
+        Number of secords that each monitor will sleep between test iterations.
+
+    SYSTER_UFS_PIDPATH  (Default: ${SYSTER_HOME}/var/lock/syster_ufs.pid)
+        Pathname of the Child Process Creation (UFS) monitor lockfile.
+        Contains the PID of the running syster_ufs process.
+
+    SYSTER_UFS_TESTPATH  (Default: ${SYSTER_HOME}/var/mon/syster_ufs)
+        Pathname of the UFS monitor log.  Contains the concatenated
+        logs of all UFS monitors executed since the file was created.
+
+    SYSTER_UFS_LOGPATH  (Default: ${SYSTER_HOME}/var/log/syster_ufs.log)
+        Pathname of the UFS monitor operational logfile.  Contains the
+        concatenated operational log output of all UFS monitors executed since
+        the file was created.
+
+    SYSTER_UFS_ERRPATH  (Default: ${SYSTER_HOME}/var/log/syster_ufs.log)
+        Pathname of the UFS monitor error logfile.  Contains the concatenated
+        error log output of all UFS monitors executed since the file was
+        created.
+
+    SYSTER_UFS_DELAY  (Default: 6)
+        Number of whole seconds that the UFS monitor process will sleep between
+        test iterations.
+
+    SYSTER_UFS_DEBUG  (Default: "off")
+        Boolean value of the debugging status variable for the UFS test.  This
+        variable should be set to "on" or "off".
+
+FILES
+    ${SYSTER_HOME}/sbin/syster_ufs
+    ${SYSTER_HOME}/etc/syster.conf
+    ${SYSTER_HOME}/etc/syster.defaults
+
+NOTES
+    In  addition to the documentation  and man pages  included with  the Syster
+    distribution, more information is available at http://www.netmq.org/syster
+
+
+RCSID
+    $Id: syster_ufs.catman,v 1.1 2013/08/12 20:57:54 zma0472 Exp $
+

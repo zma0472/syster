@@ -1,0 +1,70 @@
+SYSTER_NET(8)           Syster POSIX Subsystem Monitors            SYSTER_NET(8)
+
+NAME
+    syster_net - Syster Network (NET) monitor
+
+SYNOPSIS
+    syster_net
+
+DESCRIPTION
+    syster_net is the Syster TCP/IP Network POSIX subsystem monitor daemon.
+    The daemon periodically performs direct tests of the TCP/IP networking
+    subsystem.  It operates by attempting to open a TCP/IP socket connection to
+    an echo server.  If this succeeds, syster_mem then attempts to write a
+    monitor record to the file descriptor corresponding to the TCP/IP socket.
+    If the write succeeds, syster_mem then attempts to read data from the
+    socket descriptor.  If the read succeeds, syster_mem then appends the
+    contents of the read buffer to the the daemon's monitor log.  A valid
+    monitor log record thus serves to establish the availability, at the time
+    of the record's creation, of the networking subsystem to user-mode
+    processes.
+
+ENVIRONMENT
+    SYSTER_HOME  (Default: /usr/local/syster)
+        Pathname of the directory containing the Syster instance.
+
+    SYSTER_DEBUG (Default: "off")
+        Initial monitor debug state "on" or "off".
+
+    SYSTER_DELAY  (Default: 6)
+        Number of secords that each monitor will sleep between test iterations.
+
+    SYSTER_NET_PIDPATH  (Default: ${SYSTER_HOME}/var/lock/syster_net.pid)
+        Pathname of the Child Process Creation (NET) monitor lockfile.
+        Contains the PID of the running syster_net process.
+
+    SYSTER_NET_TESTPATH  (Default: ${SYSTER_HOME}/var/mon/syster_net)
+        Pathname of the NET monitor log.  Contains the concatenated
+        logs of all NET monitors executed since the file was created.
+
+    SYSTER_NET_LOGPATH  (Default: ${SYSTER_HOME}/var/log/syster_net.log)
+        Pathname of the NET monitor operational logfile.  Contains the
+        concatenated operational log output of all NET monitors executed since
+        the file was created.
+
+    SYSTER_NET_ERRPATH  (Default: ${SYSTER_HOME}/var/log/syster_net.log)
+        Pathname of the NET monitor error logfile.  Contains the concatenated
+        error log output of all NET monitors executed since the file was
+        created.
+
+    SYSTER_NET_DELAY  (Default: 6)
+        Number of whole seconds that the NET monitor process will sleep between
+        test iterations.
+
+    SYSTER_NET_DEBUG  (Default: "off")
+        Boolean value of the debugging status variable for the NET test.  This
+        variable should be set to "on" or "off".
+
+FILES
+    ${SYSTER_HOME}/sbin/syster_net
+    ${SYSTER_HOME}/etc/syster.conf
+    ${SYSTER_HOME}/etc/syster.defaults
+
+NOTES
+    In  addition to the documentation  and man pages  included with  the Syster
+    distribution, more information is available at http://www.netmq.org/syster
+
+
+RCSID
+    $Id: syster_net.catman,v 1.1 2013/08/12 20:57:54 zma0472 Exp $
+

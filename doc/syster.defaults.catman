@@ -1,0 +1,29 @@
+SYSTER.DEFAULTS(5)         Syster Configuration Files         SYSTER.DEFAULTS(5)
+
+NAME
+    syster.defaults - Syster main configuration default settings file.
+
+DESCRIPTION
+    This is the main Syster configuration default settings file.  As
+    distributed, this file contains the default values of all of Syster's
+    configurable settings.  The syster.defaults file should not be altered.  In
+    order to changed a setting to a non-default value, edit the syster.conf
+    file instead.  Un-comment the line in syster.conf containing the value
+    assignment for the setting and then edit the assigned value.
+
+FILES
+    ${SYSTER_HOME}/etc/syster.conf
+    ${SYSTER_HOME}/etc/syster.defaults
+
+SEE ALSO
+    syster(8), syster_ctl(8),    syster.defaults(5),  syster_dbg(1),
+    syster_rpt(1), syster_mem(8), syster_ufs(8),  syster_cpc(8), syster_net(8)
+
+NOTES
+    In  addition to the documentation  and man pages  included with  the Syster
+    distribution, more information is available at http://www.netmq.org/syster
+
+
+RCSID
+    $Id: syster.defaults.catman,v 1.1 2013/08/12 20:57:54 zma0472 Exp $
+
